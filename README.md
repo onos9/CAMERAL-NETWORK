@@ -1,21 +1,21 @@
 # CAMERAL-NETWORK
 THREE STEPS TO CREATE A CAMERAL NETWORK.
 
-> 当前只初步完成了摄像头以30fps捕获图像，输出yuyv格式。然后进行格式转换，yuyv转成264.最后用rtp传输到目标主机。
+> Currently, the camera has only initially completed capturing images at 30fps and outputting yuyv format. Then the format is converted, yuyv is converted to 264. Finally, it is transmitted to the target host using rtp.
 
-## 项目简介（开发平台ubuntu 18）
+Project introduction (development platform ubuntu 18)
 
-### 1. 使用的库有v4l2、x264、jrtplib
+### 1. The libraries used are v4l2, x264, jrtplib
 
 #### 1.1 v4l2
 
-* ubuntu带的有，不用装。
+* ubuntu comes with it, so you don’t need to install it.
 
 #### 1.2 x264
 
 * `git clone http://git.videolan.org/git/x264.git`
 * `./configure --enable-shared`
-* `make` 如果出错的话，先安装一些需要的库。运行下面的命令即可。
+* `make` If something goes wrong, install some required libraries first. Just run the following command.
 ```
 sudo apt-get install build-essential git-core checkinstall texi2html libfaac-dev \
 libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev libtheora-dev \
@@ -30,37 +30,37 @@ libvorbis-dev libx11-dev libxfixes-dev zlib1g-dev
 * `make` 
 * `make install`
 
-### 2. 目录介绍
+### 2. Catalog Introduction
 
-* include:头文件目录
-    * config.h 配置文件
-    * debug.h debug打印输出
+* include: header file directory
+    * `config.h` configuration file
+    * `ddebug.h` debug print output
 
-* res: 包含一些资源
+* res: res: contains some resources
 
-* test:测试目录，包含整个流程的测试。通过test_min_level和test_max_level来配置测试的流程。具体可以看./test/test_main.cpp代码。
-    * 摄像头捕获测试
-    * yuyv转成yuv420p测试
-    * yuv420p转成264测试
-    * 264传输测试
+* test:Test directory, which contains the tests of the entire process. Configure the test flow through test_min_level and test_max_level. You can see the code in ./test/test_main.cpp for details.
+    * Camera capture test
+    * yuyv converted to yuv420p test
+    * yuv420p converted to 264 test
+    * 264 transmission test
 
-* *.cpp文件:源码
+* *.cpp file: source code
 
-### 3. 编译和运行
+### 3. Compile and run
 
-* 如果想要分段测试的话，将main.cpp中main函数的run()注释掉。反之，运行的话，则取消注释。
-* make
-* 运行（下面三个步骤不分先后）
-    * 连上本地的摄像头
-    * ./main
-    * 打开用户终端的接收264流的软件，比如vlc。
-
-### 4. 本地测试过程
-
-* 注释掉main.cpp里面的run()函数
+* If you want to test in segments, comment out the run() of the main function in main.cpp. On the contrary, if it is running, uncomment it.
 * `make`
-* `./main x,y` x是测试的开始项，y是测试的结束项
-* 之后会在res目录下面生成相应的视频文件(100帧),下面是播放命令
+* Run (the following three steps are in no particular order)
+    * Connect to the local camera
+    * `./main`
+    * Open the software of the user terminal that receives 264 streams, such as vlc.
+
+### 4. Local testing process
+
+* Comment out the run() function in main.cpp
+* `make`
+* `./main x,y` x is the start item of the test, y is the end item of the test
+* After that, the corresponding video file (100 frames) will be generated under the res directory, and the following is the playback command
 
 ```
 ffplay -f rawvideo -pixel_format yuyv422 -video_size 640x480 ./res/image.yuyv
@@ -69,25 +69,25 @@ ffplay -stats -f h264 ./res/image.264
 ```
 
 
-## TODO:三个步骤即可创建一个摄像头到用户终端的显示，适合的场景比如：车载摄像头
+## TODO: Three steps can create a camera to the user terminal display, suitable for scenarios such as: car camera
 
-### 1. 摄像头配置
+### 1.  Camera configuration
 
-* 函数名:camera_struct camera(camera_struct *cam);
+* Function name: `camera_struct camera(camera_struct *cam);`
 
-* 设置参数，比如频率、捕获的图片格式等等。
+* Set parameters, such as frequency, captured image format, etc.
 
-### 2. 格式转换
+### 2. Format conversion
 
-* 函数名:format_struct convert_format(format_struct *for);
+* Function name: `format_struct convert_format(format_struct *for);`
 
-* 设置转换目标格式，比如264、jpeg、m3u8等等。
+* Set the conversion target format, such as 264, jpeg, m3u8, etc.。
 
-### 3. 传输
+### 3. Transmission
 
-* 函数名:tran_struct transmit(tran_strcut *tran);
+* `Function name: tran_struct transmit(tran_strcut *tran);`
 
-* 选择传输协议，比如rtp、rtmp、flv等等。
+* Select the transmission protocol, such as rtp, rtmp, flv, etc.
 
 
 
